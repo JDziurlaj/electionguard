@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('OSX'))">net7.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">net7.0-windows10.0.19041.0</TargetFrameworks>
+		
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">net9.0-windows10.0.19041.0</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 		<UseMaui>true</UseMaui>
@@ -20,15 +20,13 @@
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.92.0</ApplicationDisplayVersion>
 		<ApplicationVersion>19</ApplicationVersion>
-
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.3</SupportedOSPlatformVersion>
+		
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
 		<Nullable>enable</Nullable>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 		<!--<Configurations>Release;Debug</Configurations>-->
-		<Platforms Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">arm64;x64</Platforms>
 		<Platforms Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">AnyCPU</Platforms>
 		<UserSecretsId>efb177b9-29c3-4df1-adaa-be7e64bdc8ce</UserSecretsId>
 	</PropertyGroup>
@@ -37,32 +35,11 @@
 		<DefineConstants>$(DefineConstants);APPCENTER_SECRET_MACOS=$(APPCENTER_SECRET_MACOS);APPCENTER_SECRET_UWP=$(APPCENTER_SECRET_UWP)</DefineConstants>
 	</PropertyGroup>
 
-
-	<PropertyGroup Label="Debug|arm64" Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|arm64'">
-		<CreatePackage>false</CreatePackage>
-		<RuntimeIdentifiers>maccatalyst-arm64;maccatalyst-x64</RuntimeIdentifiers>
-	</PropertyGroup>
-
-	<PropertyGroup Label="Release|arm64" Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|arm64'">
-		<CreatePackage>true</CreatePackage>
-		<RuntimeIdentifiers>maccatalyst-arm64;maccatalyst-x64</RuntimeIdentifiers>
-	</PropertyGroup>
-
-	<PropertyGroup Label="Debug|x64" Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|x64'">
-		<CreatePackage>false</CreatePackage>
-		<RuntimeIdentifiers>maccatalyst-x64</RuntimeIdentifiers>
-	</PropertyGroup>
-
-	<PropertyGroup Label="Release|x64" Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|x64'">
-		<CreatePackage>false</CreatePackage>
-		<RuntimeIdentifiers>maccatalyst-x64</RuntimeIdentifiers>
-	</PropertyGroup>
-
-	<PropertyGroup Label="Debug|x64" Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|x64'">
+	<PropertyGroup Label="Debug|x64" Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-windows10.0.19041.0|x64'">
 		<CreatePackage>false</CreatePackage>
 	</PropertyGroup>
 
-	<PropertyGroup Label="Release|x64" Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|x64'">
+	<PropertyGroup Label="Release|x64" Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-windows10.0.19041.0|x64'">
 		<CreatePackage>true</CreatePackage>
 	</PropertyGroup>
 
@@ -70,7 +47,7 @@
 		<IntermediateOutputPath></IntermediateOutputPath>
 		<DebugSymbols></DebugSymbols>
 		<DebugType></DebugType>
-		<Optimize></Optimize>
+		<Optimize>False</Optimize>
 		<OutputPath></OutputPath>
 		<DefineConstants></DefineConstants>
 		<WarningLevel></WarningLevel>
@@ -97,7 +74,7 @@
 		<IntermediateOutputPath></IntermediateOutputPath>
 		<DebugSymbols></DebugSymbols>
 		<DebugType></DebugType>
-		<Optimize></Optimize>
+		<Optimize>False</Optimize>
 		<OutputPath></OutputPath>
 		<DefineConstants></DefineConstants>
 		<WarningLevel></WarningLevel>
@@ -149,6 +126,8 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
 		<PackageReference Include="CommunityToolkit.Maui" />
 		<PackageReference Include="CommunityToolkit.Mvvm" />
+		<PackageReference Include="Microsoft.Maui.Controls" />
+		<PackageReference Include="Microsoft.Maui.Controls.Xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -220,11 +199,11 @@
 		<ElectionGuardLibs>..\..\..\build\libs</ElectionGuardLibs>
 		<ElectionGuardScripts>..\..\..\scripts</ElectionGuardScripts>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-windows10.0.19041.0|AnyCPU'">
 		<DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION</DefineConstants>
 		<DebugType>portable</DebugType>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-windows10.0.19041.0|AnyCPU'">
 		<DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION</DefineConstants>
 		<DebugType>portable</DebugType>
 	</PropertyGroup>
