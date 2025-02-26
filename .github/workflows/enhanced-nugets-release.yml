@@ -1,6 +1,7 @@
 name: Enhanced Nugets Release
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - "v*.*.*"
