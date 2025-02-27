@@ -1,6 +1,6 @@
 ﻿using ElectionGuard.UI.Lib.Models;
 
-namespace ElectionGuard.ElectionSetup.Exceptions
+namespace ElectionGuard.UI.Lib.Exceptions
 {
     internal class KeyCeremonyException : Exception
     {

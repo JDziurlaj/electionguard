@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics;
-using ElectionGuard.ElectionSetup.Exceptions;
+using ElectionGuard.UI.Lib.Exceptions;
 using ElectionGuard.ElectionSetup.Extensions;
 using ElectionGuard.Extensions;
 using ElectionGuard.Guardians;
 using ElectionGuard.UI.Lib.Models;
 using ElectionGuard.UI.Lib.Services;
+using ElectionGuard.ElectionSetup;
+using ElectionGuard.ElectionSetup.Records;
 
-namespace ElectionGuard.ElectionSetup;
+namespace ElectionGuard.UI.Lib.Services;
 
 public interface IKeyCeremonyMediator
 {
@@ -751,7 +753,7 @@ public class KeyCeremonyMediator
                 keyCeremonyId,
                 UserId,
                 backup.DesignatedId!,
-                backup
+                new(backup)
             );
 
             _ = await _backupService.SaveAsync(data);
@@ -802,7 +804,7 @@ public class KeyCeremonyMediator
         // TODO: ISSUE #213 throw on invalid backup
         foreach (var backup in backups!)
         {
-            guardian!.SaveElectionPartialKeyBackup(backup.Backup!);
+            guardian!.SaveElectionPartialKeyBackup(backup.Backup!.ToRecord());
             var verification = guardian.VerifyElectionPartialKeyBackup(backup.GuardianId!, keyCeremonyId);
             if (verification == null) // TODO: ISSUE #213 throw on invalid backup
             {
@@ -812,7 +814,7 @@ public class KeyCeremonyMediator
                     UserId,
                     $"Error verifying back from {backup.Backup!.OwnerId!}");
             }
-            verifications.Add(verification);
+            verifications.Add(new(verification));
         }
         // save verifications
         foreach (var verification in verifications)
