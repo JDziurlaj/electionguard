@@ -133,6 +133,10 @@ jobs:
         working-directory: bindings/netstandard/ElectionGuard/ElectionGuard.Encryption
         run: dotnet nuget push "**/*.nupkg" --api-key GithubActions --source EV --skip-duplicate
 
+      - name: Publish ElectionGuard.Decryption to Nuget.org
+        working-directory: bindings/netstandard/ElectionGuard/ElectionGuard.Decryption
+        run: dotnet nuget push "**/*.nupkg" --api-key GithubActions --source EV --skip-duplicate
+
   publish_release:
     name: Publish Release
     needs: [get_version_code, publish_nuget]
