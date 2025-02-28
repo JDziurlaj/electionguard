@@ -9,6 +9,26 @@
     <Platforms>arm64;x64;x86</Platforms>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- Package -->
+    <PackageId>ElectionGuard.Decryption</PackageId>
+    <Title>ElectionGuard Decryption</Title>
+    <Description>Open source implementation of ElectionGuard's ballot decryption.</Description>
+    <Authors>Microsoft</Authors>
+    <PackageVersion>1.75.17</PackageVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/microsoft/electionguard-core2</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/microsoft/electionguard-core2</RepositoryUrl>
+    <PackageTags>Microsoft;Electionguard;Encryption;Windows;MacOS;Linux</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <!-- <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies> -->
+    <!-- <PackageReleaseNotes>Changelog</PackageReleaseNotes> -->
+    <Platforms>arm64;x64;x86</Platforms>
+  </PropertyGroup>
+
 
   <ItemGroup>
     <ProjectReference Include="..\ElectionGuard.ElectionSetup\ElectionGuard.ElectionSetup.csproj" />
@@ -28,6 +48,12 @@
     <NoWarn>1701;1702</NoWarn>
     <WarningLevel>4</WarningLevel>
     <WarningsNotAsErrors>SYSLIB0004</WarningsNotAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup Label="Additional Package Files">
+    <None Name="ReadMe" Include="..\README.md" Pack="true" PackagePath="\" />
+    <None Name="Icon" Include="..\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
 </Project>
