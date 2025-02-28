@@ -1,9 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <!-- Project -->
     <RootNamespace>ElectionGuard</RootNamespace>
     <AssemblyName>ElectionGuard.Decryption</AssemblyName>
     <Version>1.75.17</Version>
@@ -12,6 +11,8 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <Platforms>arm64;x64;x86</Platforms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -24,7 +25,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/microsoft/electionguard-core2</PackageProjectUrl>
     <RepositoryUrl>https://github.com/microsoft/electionguard-core2</RepositoryUrl>
-    <PackageTags>Microsoft;Electionguard;Encryption;Windows;MacOS;Linux</PackageTags>
+    <PackageTags>Microsoft;Electionguard;Decryption;Windows;MacOS;Linux</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
