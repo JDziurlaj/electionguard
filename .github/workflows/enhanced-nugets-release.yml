@@ -127,7 +127,7 @@ jobs:
           dotnet pack -c Release --version-suffix ${{needs.get_version_code.outputs.build_number}}
 
       - name: Setup Private Nuget Feed
-        run: dotnet nuget add source https://pkgs.dev.azure.com/enhancedvoting/89e3a23c-f720-49d6-a79d-2033288a6017/_packaging/4e18252f-176a-7e3d-bfdb-c1525470b0d7/nuget/v3/index.json -n EV -u GithubActions -p ${{ secrets.EV_ADO_PAT }}
+        run: dotnet nuget add source https://pkgs.dev.azure.com/enhancedvoting/89e3a23c-f720-49d6-a79d-2033288a6017/_packaging/4e18252f-176a-7e3d-bfdb-c1525470b0d7/nuget/v3/index.json -n EV -u GithubActions -p ${{ secrets.EV_ADO_PAT }} --store-password-in-clear-text
 
       - name: Publish ElectionGuard.Encryption to Nuget.org
         working-directory: bindings/netstandard/ElectionGuard/ElectionGuard.Encryption
