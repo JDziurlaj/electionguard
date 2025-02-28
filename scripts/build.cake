@@ -7,7 +7,7 @@ var encryptionProj = "../bindings/netstandard/ElectionGuard/ElectionGuard.Encryp
 var decryptionProj = "../bindings/netstandard/ElectionGuard/ElectionGuard.Decryption/ElectionGuard.Decryption.csproj";
 var setupProj = "../bindings/netstandard/ElectionGuard/ElectionGuard.ElectionSetup/ElectionGuard.ElectionSetup.csproj";
 
-var projects = [encryptionProj, decryptionProj, setupProj];
+var projects = new[] { encryptionProj, decryptionProj, setupProj };
 
 Task("AssignVersion")
     .Does(() =>
