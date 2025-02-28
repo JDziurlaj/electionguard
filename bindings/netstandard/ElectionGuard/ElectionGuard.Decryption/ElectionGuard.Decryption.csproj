@@ -4,6 +4,11 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RootNamespace>ElectionGuard</RootNamespace>
+    <AssemblyName>ElectionGuard.Decryption</AssemblyName>
+    <Version>1.75.17</Version>
+    <AssemblyVersion>1.75.17.0</AssemblyVersion>
+    <AssemblyFileVersion>1.75.17.0</AssemblyFileVersion>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <Platforms>arm64;x64;x86</Platforms>
