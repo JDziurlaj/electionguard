@@ -74,7 +74,7 @@ public class CiphertextTallySelection : DisposableBase,
     public ElGamalCiphertext Accumulate(ICiphertextSelection selection)
     {
         return selection.ObjectId != ObjectId || selection.DescriptionHash != DescriptionHash
-            ? throw new ArgumentException($"Selection does not match tally: {ObjectId} {DescriptionHash} selection: {selection.ObjectId} {selection.DescriptionHash}")
+            ? throw new ArgumentException("Selection does not match")
             : Accumulate(selection.Ciphertext);
     }
 

@@ -7,7 +7,6 @@
 #include <electionguard/ballot.hpp>
 #include <electionguard/election.hpp>
 #include <electionguard/encrypt.hpp>
-#include <electionguard/hash.hpp>
 #include <electionguard/manifest.hpp>
 #include <electionguard/nonces.hpp>
 
@@ -74,7 +73,7 @@ BENCHMARK_DEFINE_F(EncryptSelectionFixture, encryptSelection_getProof_isValid)
 {
     while (state.KeepRunning()) {
         ciphertext->getProof()->isValid(*ciphertext->getCiphertext(), *keypair->getPublicKey(),
-                                        ONE_MOD_Q(), HashPrefix::get_prefix_selection_proof());
+                                        ONE_MOD_Q());
     }
 }
 

@@ -355,10 +355,9 @@ namespace ElectionGuard.Encryption.Utils.Generators
         {
             Console.WriteLine($"GetFakeBallots {count}");
             var ballots = new List<PlaintextBallot>();
-            var batch = DateTime.Now.Ticks.ToString();
             for (var i = 0; i < count; i++)
             {
-                ballots.Add(GetFakeBallot(manifest, random, $"fake-ballot-{i}-{batch}"));
+                ballots.Add(GetFakeBallot(manifest, random, $"fake-ballot-{i}"));
             }
 
             return ballots;

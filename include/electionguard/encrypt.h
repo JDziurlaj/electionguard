@@ -179,7 +179,7 @@ EG_API eg_electionguard_status_t eg_encryption_mediator_encrypt_ballot(
 
 EG_API eg_electionguard_status_t eg_encryption_mediator_encrypt_ballot_verify_proofs(
   eg_encryption_mediator_t *handle, eg_plaintext_ballot_t *in_plaintext,
-  bool in_use_precomputed_values, eg_ciphertext_ballot_t **out_ciphertext_handle);
+  eg_ciphertext_ballot_t **out_ciphertext_handle);
 
 #endif
 
