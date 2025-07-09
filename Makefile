@@ -208,21 +208,21 @@ endif
 
 build-arm64:
 ifeq ($(OPERATING_SYSTEM),Windows)
-	PROCESSOR=arm64 && make build
+	set "PROCESSOR=arm64" && make build
 else
 	PROCESSOR=arm64 && make build
 endif
 
 build-x64:
 ifeq ($(OPERATING_SYSTEM),Windows)
-	PROCESSOR=x64 && make build
+	set "PROCESSOR=x64" && make build
 else
 	PROCESSOR=x64 && make build
 endif
 
 build-x86:
 ifeq ($(OPERATING_SYSTEM),Windows)
-	PROCESSOR=x86 VSPLATFORM=Win32 USE_32BIT_MATH=ON && make build
+	set "PROCESSOR=x86" && set "VSPLATFORM=Win32" && set "USE_32BIT_MATH=ON" && make build
 else
 	PROCESSOR=x86 VSPLATFORM=Win32 USE_32BIT_MATH=ON && make build
 endif
@@ -244,7 +244,7 @@ endif
 
 build-msys2-x86:
 ifeq ($(OPERATING_SYSTEM),Windows)
-	PROCESSOR=x86 USE_32BIT_MATH=ON && make build-msys2
+	set "PROCESSOR=x86" && set "USE_32BIT_MATH=ON" && make build-msys2
 else
 	echo "MSYS2 builds are only supported on Windows"
 endif
@@ -252,7 +252,7 @@ endif
 build-android:
 	@echo 📱 BUILD ANDROID
 ifeq ($(OPERATING_SYSTEM),Windows)
-	PROCESSOR=arm64 OPERATING_SYSTEM=Android && make build
+	set "PROCESSOR=arm64" && set "OPERATING_SYSTEM=Android" && make build
 else
 	PROCESSOR=arm64 OPERATING_SYSTEM=Android && make build
 endif
@@ -289,14 +289,14 @@ build-netstandard: build
 
 build-netstandard-x64:
 ifeq ($(OPERATING_SYSTEM),Windows)
-	PROCESSOR=x64 && make build-netstandard
+	set "PROCESSOR=x64" && make build-netstandard
 else
 	PROCESSOR=x64 && make build-netstandard
 endif
 
 build-netstandard-x86:
 ifeq ($(OPERATING_SYSTEM),Windows)
-	PROCESSOR=x86 VSPLATFORM=Win32 USE_32BIT_MATH=ON && make build-netstandard
+	set "PROCESSOR=x86" && set "VSPLATFORM=Win32" && set "USE_32BIT_MATH=ON" && make build-netstandard
 endif
 
 build-cli:
@@ -590,20 +590,20 @@ endif
 
 test-arm64:
 ifeq ($(OPERATING_SYSTEM),Windows)
-	PROCESSOR=arm64 && make test
+	set "PROCESSOR=arm64" && make test
 else
 	PROCESSOR=arm64 && make test
 endif
 
 test-x64:
 ifeq ($(OPERATING_SYSTEM),Windows)
-	PROCESSOR=x64 && make test
+	set "PROCESSOR=x64" && make test
 else
 	PROCESSOR=x64 && make test
 endif
 
 test-x86:
-	PROCESSOR=x86 USE_32BIT_MATH=ON VSPLATFORM=Win32 && make test
+	set "PROCESSOR=x86" && set "USE_32BIT_MATH=ON" && set "VSPLATFORM=Win32" && make test
 
 test-msys2:
 	@echo 🧪 TEST MSYS2 $(OPERATING_SYSTEM) $(PROCESSOR) $(TARGET)
@@ -626,7 +626,7 @@ endif
 
 test-msys2-x86:
 ifeq ($(OPERATING_SYSTEM),Windows)
-	PROCESSOR=x86 USE_32BIT_MATH=ON && make test-msys2
+	set "PROCESSOR=x86" && set "USE_32BIT_MATH=ON" && make test-msys2
 else
 	echo "MSYS2 tests are only supported on Windows"
 endif
@@ -639,19 +639,19 @@ test-netstandard: build-netstandard
 
 test-netstandard-arm64:
 ifeq ($(OPERATING_SYSTEM),Windows)
-	PROCESSOR=arm64 && make test-netstandard
+	set "PROCESSOR=arm64" && make test-netstandard
 else
 	PROCESSOR=arm64 && make test-netstandard
 endif
 
 test-netstandard-x64:
-	PROCESSOR=x64 && make test-netstandard
+	set "PROCESSOR=x64" && make test-netstandard
 
 test-netstandard-x86:
 ifeq ($(OPERATING_SYSTEM),Darwin)
 	echo "x86 builds are not supported on MacOS"
 else
-	PROCESSOR=x86 VSPLATFORM=Win32 USE_32BIT_MATH=ON && make test-netstandard
+	set "PROCESSOR=x86" && set "VSPLATFORM=Win32" && set "USE_32BIT_MATH=ON" && make test-netstandard
 endif
 
 # copy the build output from the processor builds to 
@@ -728,7 +728,11 @@ fetch-sample-data:
 	@echo ⬇️ FETCH Sample Data
 	wget -O $(TEMPFILE) https://github.com/microsoft/electionguard/releases/download/v1.0/sample-data.zip
 	unzip -o $(TEMPFILE)
+ifeq ($(OPERATING_SYSTEM),Windows)
+	del $(TEMPFILE)
+else
 	rm -f $(TEMPFILE)
+endif
 
 generate-sample-data: build-netstandard
 	@echo Generate Sample Data
