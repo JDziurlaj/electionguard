@@ -114,15 +114,6 @@ ifeq ($(OPERATING_SYSTEM),Darwin)
 endif
 ifeq ($(OPERATING_SYSTEM),Linux)
 	@echo 🐧 LINUX INSTALL
-	if [ -f /etc/os-release ] && grep -qi "alpine" /etc/os-release; then \
-		echo "🏔️ Alpine Linux detected"; \
-		sudo apk update; \		
-		echo "Installing CXX dependencies"; \
-		sudo apk add make musl-dev g++ cmake; \
-		echo "Installing DotNet dependencies"
-# See https://learn.microsoft.com/en-us/dotnet/core/install/linux-alpine?tabs=dotnet9
-		sudo apk add dotnet9-sdk dotnetcore9-runtime
-	else \
 		echo "🐧 Debian-based Linux detected"; \
 # to get Debian version of .NET
 		wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
@@ -134,8 +125,11 @@ ifeq ($(OPERATING_SYSTEM),Linux)
 		sudo apt install -y iwyu
 		sudo apt install -y llvm
 # must update to bc bookworm doesn't have clang 12 anymore...
+
+# But Debian bullseye only has clang-13
+
 # maybe don't specify a version unless we need older behavior??
-		sudo apt install -y clang-14
+		sudo apt install -y clang-13
 		sudo apt install -y cmake
 		sudo apt install -y lcov
 		sudo apt install -y cppcheck
@@ -148,8 +142,6 @@ ifeq ($(OPERATING_SYSTEM),Linux)
 		sudo apt install -y dotnet-sdk-9.0
 # wasm deps
 		sudo apt install -y npm
-	fi
-	
 endif
 ifeq ($(OPERATING_SYSTEM),Windows)
 	@echo 🏁 WINDOWS INSTALL
