@@ -1,9 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using ElectionGuard.Decryption;
 using ElectionGuard.UI.Services;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Crashes;
-using Microsoft.AppCenter.Analytics;
 using MetroLog.MicrosoftExtensions;
 using System.Reflection;
 
