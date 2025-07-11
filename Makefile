@@ -145,6 +145,7 @@ ifeq ($(OPERATING_SYSTEM),Linux)
 endif
 ifeq ($(OPERATING_SYSTEM),Windows)
 	@echo 🏁 WINDOWS INSTALL
+	choco install powershell-core
 	choco upgrade wget -y
 	choco upgrade unzip -y
 	choco upgrade cmake -y
