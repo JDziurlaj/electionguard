@@ -329,13 +329,14 @@ build-cli:
 	cd ./apps/electionguard-cli && dotnet restore
 	dotnet build -c $(TARGET) $(ELECTIONGUARD_APP_CLI_DIR)/ElectionGuard.CLI.sln /p:Platform=$(PROCESSOR)
 
-build-ui:
-@echo 🖥️ BUILD UI $(OPERATING_SYSTEM) $(PROCESSOR) $(TARGET)
+build-ui:	
+	@echo 🖥️ BUILD UI $(OPERATING_SYSTEM) $(PROCESSOR) $(TARGET)
 ifeq ($(OPERATING_SYSTEM),Windows)	
 	cd ./src/electionguard-ui && dotnet restore
 	dotnet build -c $(TARGET) ./src/electionguard-ui/ElectionGuard.UI.sln /p:Platform=$(PROCESSOR) /p:APPCENTER_SECRET_UWP=$(APPCENTER_SECRET_UWP) /p:APPCENTER_SECRET_MACOS=$(APPCENTER_SECRET_MACOS)
 else
 	echo "MAUI builds are only supported on Windows"
+endif
 
 build-wasm:
 	@echo 🌐 BUILD WASM $(OPERATING_SYSTEM) $(PROCESSOR) $(TARGET)
@@ -721,7 +722,12 @@ test-cli: build-cli
 
 test-ui: build-ui
 	@echo 🧪 TEST UI $(OPERATING_SYSTEM) $(PROCESSOR) $(TARGET)
- dotnet test -a $(PROCESSOR) -c $(TARGET) ./src/electionguard-ui/ElectionGuard.UI.Test/ElectionGuard.UI.Test.csproj
+ifeq ($(OPERATING_SYSTEM),Windows)
+	dotnet test -a $(PROCESSOR) -c $(TARGET) -v 5 ./src/electionguard-ui/ElectionGuard.UI.Test/ElectionGuard.UI.Test.csproj
+else
+	@echo "MAUI builds are only supported on Windows"
+endif
+ 
 
 test-wasm: build-wasm
 	@echo 🧪 TEST WASM $(PROCESSOR) $(TARGET)
