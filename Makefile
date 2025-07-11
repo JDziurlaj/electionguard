@@ -194,7 +194,7 @@ ifeq ($(OPERATING_SYSTEM),Linux)
 	sudo dotnet workload restore ./src/electionguard-ui/ElectionGuard.UI/ElectionGuard.UI.csproj && dotnet restore ./src/electionguard-ui/ElectionGuard.UI.sln
 endif
 	dotnet tool restore
-	npm i -g appcenter-cli
+	
 
 environment-wasm:
 	@echo 🌐 WASM INSTALL
@@ -333,7 +333,7 @@ build-ui:
 	@echo 🖥️ BUILD UI $(OPERATING_SYSTEM) $(PROCESSOR) $(TARGET)
 ifeq ($(OPERATING_SYSTEM),Windows)	
 	cd ./src/electionguard-ui && dotnet restore
-	dotnet build -c $(TARGET) ./src/electionguard-ui/ElectionGuard.UI.sln /p:Platform=$(PROCESSOR) /p:APPCENTER_SECRET_UWP=$(APPCENTER_SECRET_UWP) /p:APPCENTER_SECRET_MACOS=$(APPCENTER_SECRET_MACOS)
+	dotnet build -c $(TARGET) ./src/electionguard-ui/ElectionGuard.UI.sln /p:Platform=$(PROCESSOR)
 else
 	echo "MAUI builds are only supported on Windows"
 endif
@@ -442,34 +442,15 @@ endif
 publish-ui: 
 	@echo 🧱 PUBLISH UI
 ifeq ($(OPERATING_SYSTEM),Windows)
-	dotnet publish -f net9.0-windows10.0.19041.0 -c $(TARGET) /p:WindowsPackageType=None /p:ApplicationVersion=$(BUILD_NUMBER) /p:RuntimeIdentifierOverride=win10-x64 /p:APPCENTER_SECRET_UWP=$(APPCENTER_SECRET_UWP) ./$(ELECTIONGUARD_APP_ADMIN_DIR)/ElectionGuard.UI/ElectionGuard.UI.csproj -o ./publish/ElectionGuard.UI
+	dotnet publish -f net9.0-windows10.0.19041.0 -c $(TARGET) /p:WindowsPackageType=None /p:ApplicationVersion=$(BUILD_NUMBER) /p:RuntimeIdentifierOverride=win10-x64 ./$(ELECTIONGUARD_APP_ADMIN_DIR)/ElectionGuard.UI/ElectionGuard.UI.csproj -o ./publish/ElectionGuard.UI
 	cd ./publish && pwsh -Command "Compress-Archive ElectionGuard.UI ElectionGuard.UI.zip -Force"
+else ifeq ($(OPERATING_SYSTEM),Darwin)
+	dotnet publish -f net9.0-maccatalyst -c $(TARGET) /p:CreatePackage=true /p:ApplicationVersion=$(BUILD_NUMBER) ./$(ELECTIONGUARD_APP_ADMIN_DIR)/ElectionGuard.UI/ElectionGuard.UI.csproj -o ./publish
+else
+	@echo "Publishing is only supported on Windows and macOS."
+	exit 1
 endif
-ifeq ($(OPERATING_SYSTEM),Darwin)
-	dotnet publish -f net9.0-maccatalyst -c $(TARGET) /p:CreatePackage=true /p:ApplicationVersion=$(BUILD_NUMBER) /p:APPCENTER_SECRET_MACOS=$(APPCENTER_SECRET_MACOS) ./$(ELECTIONGUARD_APP_ADMIN_DIR)/ElectionGuard.UI/ElectionGuard.UI.csproj -o ./publish
-endif
-# add error for running on Linuxx!
 
-publish-ui-appcenter: 
-	@echo 🧱 PUBLISH UI APPCENTER
-ifneq ($(APPCENTER_SECRET_UWP),)
-ifeq ($(OPERATING_SYSTEM),Windows)
-	@echo "Publishing UWP to AppCenter"
-	appcenter distribute release -f $(ELECTIONGUARD_PUBLISH_DIR)/ElectionGuard.UI.zip -g QualityAssurance -a "Election-Technology-Initiative/ElectionGuard-Admin-1" -n $(BUILD_NUMBER) -b $(BUILD_VERSION) --disable-telemetry --token $(APPCENTER_API_TOKEN_UWP)
-endif
-else
-	@echo "APPCENTER_SECRET_UWP not set. Skipping AppCenter publish"
-	exit 1
-endif
-ifneq ($(APPCENTER_SECRET_MACOS),)
-ifeq ($(OPERATING_SYSTEM),Darwin)
-	@echo "Publishing MacCatalyst to AppCenter"
-	appcenter distribute release -f $(ELECTIONGUARD_PUBLISH_DIR)/*.pkg -g QualityAssurance -a "Election-Technology-Initiative/ElectionGuard-Admin" -n $(BUILD_NUMBER) -b $(BUILD_VERSION) --disable-telemetry --token $(APPCENTER_API_TOKEN_MACOS)
-endif
-else
-	@echo "APPCENTER_SECRET_MACOS not set. Skipping AppCenter publish"
-	exit 1
-endif
 # add linux check
 publish-wasm: build-npm
 	@echo 🌐 PUBLISH WASM
@@ -782,3 +763,13 @@ verify: build-cli
 	@echo 🧪 Executing CLI Verifier $(OPERATING_SYSTEM) $(PROCESSOR) $(TARGET)
 	cd ./apps/electionguard-cli && dotnet run -a $(PROCESSOR) -c $(TARGET) verify -- -f $(ELECTIONGUARD_DATA_DIR)/test/ElectionRecord.zip
 	
+# Metatargets for running all tests per platform
+
+test-all-windows: test test-netstandard test-ui test-cli
+	@echo "✅ All Windows tests completed."
+
+test-all-linux: test test-netstandard test-cli test-wasm
+	@echo "✅ All Linux tests completed."
+
+test-all-macos: test test-netstandard test-cli test-wasm
+	@echo "✅ All macOS tests completed."
