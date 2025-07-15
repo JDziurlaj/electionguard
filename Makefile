@@ -332,6 +332,13 @@ else
 	PROCESSOR=x64 && make build-netstandard
 endif
 
+build-netstandard-arm64:
+ifeq ($(OPERATING_SYSTEM),Windows)
+	set "PROCESSOR=arm64" && make build-netstandard
+else
+	PROCESSOR=arm64 && make build-netstandard
+endif
+
 build-netstandard-x86:
 ifeq ($(OPERATING_SYSTEM),Windows)
 	set "PROCESSOR=x86" && set "VSPLATFORM=Win32" && set "USE_32BIT_MATH=ON" && make build-netstandard
