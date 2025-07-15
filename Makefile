@@ -100,6 +100,13 @@ all: environment build
 
 # Configure Environment
 
+environment-dev:
+	@echo 🛠️ SETTING UP DEVELOPMENT ENVIRONMENT
+ifeq ($(OPERATING_SYSTEM),Windows)		
+	choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' -y
+endif
+
+
 environment:
 ifeq ($(OPERATING_SYSTEM),Darwin)
 	@echo 🍎 MACOS INSTALL
@@ -113,7 +120,7 @@ ifeq ($(OPERATING_SYSTEM),Darwin)
 	test -f /usr/local/bin/clang-tidy || sudo ln -sf "$(shell brew --prefix llvm)/bin/clang-tidy" "/usr/local/bin/clang-tidy"
 endif
 ifeq ($(OPERATING_SYSTEM),Linux)
-	@echo 🐧 LINUX INSTALL
+		@echo 🐧 LINUX INSTALL
 		echo "🐧 Debian-based Linux detected"; \
 # to get Debian version of .NET
 		wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
@@ -152,6 +159,7 @@ ifeq ($(OPERATING_SYSTEM),Windows)
 	choco upgrade ninja -y
 	choco upgrade vswhere -y
 	choco upgrade llvm -y
+	choco upgrade git -y
 endif
 	wget -O cmake/CPM.cmake https://github.com/cpm-cmake/CPM.cmake/releases/download/v0.38.2/CPM.cmake
 	make fetch-sample-data
@@ -201,6 +209,7 @@ environment-wasm:
 	@echo 🌐 WASM INSTALL
 ifeq ($(OPERATING_SYSTEM),Windows)
 	@echo currently only supported on posix systems
+	exit 1
 else
 	./cmake/install-emscripten.sh $(EMSCRIPTEN_VERSION)
 endif
@@ -266,6 +275,7 @@ ifeq ($(OPERATING_SYSTEM),Windows)
 	cmake --build $(ELECTIONGUARD_BUILD_LIBS_DIR)/$(OPERATING_SYSTEM)/$(PROCESSOR)/$(TARGET)
 else
 	echo "MSYS2 builds are only supported on Windows"
+	exit 1
 endif
 
 build-msys2-x86:
@@ -298,6 +308,7 @@ ifeq ($(OPERATING_SYSTEM),Darwin)
 	cmake --build $(ELECTIONGUARD_BUILD_LIBS_DIR)/ios/$(TARGET) --config $(TARGET) --target install
 else
 	echo "iOS builds are only supported on MacOS"
+	exit 1
 endif
 
 build-maccatalyst:
@@ -306,6 +317,7 @@ ifeq ($(OPERATING_SYSTEM),Darwin)
 	PROCESSOR=arm64 OPERATING_SYSTEM=MacCatalyst && make build
 else
 	echo "MacCatalyst builds are only supported on MacOS"
+	exit 1
 endif
 
 build-netstandard: build
@@ -323,6 +335,9 @@ endif
 build-netstandard-x86:
 ifeq ($(OPERATING_SYSTEM),Windows)
 	set "PROCESSOR=x86" && set "VSPLATFORM=Win32" && set "USE_32BIT_MATH=ON" && make build-netstandard
+else
+	echo "x86 builds are only supported on Windows"
+	exit 1
 endif
 
 build-cli:
@@ -337,12 +352,14 @@ ifeq ($(OPERATING_SYSTEM),Windows)
 	dotnet build -c $(TARGET) ./src/electionguard-ui/ElectionGuard.UI.sln /p:Platform=$(PROCESSOR)
 else
 	echo "MAUI builds are only supported on Windows"
+	exit 1
 endif
 
 build-wasm:
 	@echo 🌐 BUILD WASM $(OPERATING_SYSTEM) $(PROCESSOR) $(TARGET)
 ifeq ($(OPERATING_SYSTEM),Windows)
 	echo "wasm builds are only supported on MacOS and Linux"
+	exit 1
 else
 	# HACK temparily disable 64-bit math for emscripten
 	cmake -S . -B $(ELECTIONGUARD_BUILD_LIBS_DIR)/wasm/$(TARGET) \
@@ -400,6 +417,7 @@ clean-wasm:
 	@echo 🗑️ CLEAN WASM
 ifeq ($(OPERATING_SYSTEM),Windows)
 	echo "wasm builds are only supported on MacOS and Linux"
+	exit 1
 else
 	cd $(ELECTIONGUARD_BINDING_TYPESCRIPT_DIR) && npm run clean:all
 endif
@@ -434,6 +452,7 @@ memcheck:
 	@echo 🧼 RUN STATIC ANALYSIS
 ifeq ($(OPERATING_SYSTEM),Windows)
 	@echo "Static analysis is only supported on Linux"
+	exit 1
 else
 	cd $(ELECTIONGUARD_BUILD_LIBS_DIR)/$(PROCESSOR) && $(MAKE) memcheck-ElectionGuardTests
 endif
@@ -457,6 +476,7 @@ publish-wasm: build-npm
 	@echo 🌐 PUBLISH WASM
 ifeq ($(OPERATING_SYSTEM),Windows)
 	@echo "wasm builds are only supported on MacOS and Linux"
+	exit 1
 else
 	cd ./bindings/typescript && npm publish
 endif
@@ -493,6 +513,7 @@ sanitize-tsan:
 	@echo 🧼 SANITIZE THREADS $(PROCESSOR)
 ifeq ($(OPERATING_SYSTEM),Windows)
 	echo "Thread sanitizer is only supported on Linux & Mac"
+	exit 1
 else
 	cmake -S . -B $(ELECTIONGUARD_BUILD_LIBS_DIR)/$(PROCESSOR)/Debug \
 		-DCPM_SOURCE_CACHE=$(CPM_SOURCE_CACHE) \
@@ -641,6 +662,7 @@ ifeq ($(OPERATING_SYSTEM),Windows)
 	set "PROCESSOR=x86" && set "USE_32BIT_MATH=ON" && make test-msys2
 else
 	echo "MSYS2 tests are only supported on Windows"
+	exit 1
 endif
 
 test-netstandard: build-netstandard
@@ -708,6 +730,7 @@ ifeq ($(OPERATING_SYSTEM),Windows)
 	dotnet test -a $(PROCESSOR) -c $(TARGET) -v 5 ./src/electionguard-ui/ElectionGuard.UI.Test/ElectionGuard.UI.Test.csproj
 else
 	@echo "MAUI builds are only supported on Windows"
+	exit 1
 endif
  
 
